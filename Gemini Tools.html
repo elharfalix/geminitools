@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini Tools - حساب Gemini AI Ultra</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+    
+    * {
+      font-family: 'Cairo', sans-serif;
+    }
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .feature-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    .pulse-button {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 0 15px rgba(102, 126, 234, 0);
+      }
+    }
+    
+    .countdown-badge {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      animation: shine 3s ease-in-out infinite;
+      box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+      transition: all 0.3s ease;
+    }
+    
+    @keyframes shine {
+      0%, 100% {
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+      }
+      50% {
+        box-shadow: 0 6px 25px rgba(251, 191, 36, 0.6);
+      }
+    }
+    
+    .countdown-update {
+      animation: countdownPulse 0.6s ease-out;
+    }
+    
+    @keyframes countdownPulse {
+      0% {
+        transform: scale(1);
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      }
+      25% {
+        transform: scale(1.15);
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        box-shadow: 0 8px 30px rgba(239, 68, 68, 0.6);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      75% {
+        transform: scale(1.12);
+      }
+      100% {
+        transform: scale(1);
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      }
+    }
+    
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10b981;
+      color: white;
+      padding: 16px 32px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+    
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .star-filled {
+      color: #fbbf24;
+    }
+    
+    .star-empty {
+      color: #d1d5db;
+    }
+    
+    .review-card {
+      transition: transform 0.2s ease;
+    }
+    
+    .review-card:hover {
+      transform: scale(1.02);
+    }
+    
+    .faq-item {
+      transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+      border-color: #7c3aed;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+    }
+    
+    .faq-question {
+      cursor: pointer;
+    }
+    
+    .faq-answer {
+      transition: max-height 0.4s ease, padding 0.4s ease;
+    }
+    
+    .faq-item.active .faq-answer {
+      max-height: 500px;
+      padding-bottom: 1.25rem;
+    }
+    
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+    
+    @media (min-width: 768px) {
+      .faq-item.active .faq-answer {
+        padding-bottom: 1.5rem;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body>
+  <div id="toast" class="toast"></div><!-- Warning Banner -->
+  <div class="w-full bg-red-600 text-white py-3 px-4">
+   <div class="max-w-4xl mx-auto text-center">
+    <p class="text-base md:text-lg font-bold">⚠️ عدد الحسابات محدود جداً! الخصم قد ينتهي في أي لحظة ⏰</p>
+   </div>
+  </div>
+  <div class="gradient-bg w-full min-h-full"><!-- Hero Section -->
+   <div class="w-full px-4 py-12 md:py-16">
+    <div class="max-w-4xl mx-auto text-center text-white">
+     <div class="mb-6">
+      <h1 id="main-title" class="text-3xl md:text-5xl font-bold mb-3 leading-relaxed">قم بإنشاء فيديوهات بالذكاء الاصطناعي بجودة عالية مع خطة Gemini Ultra</h1>
+      <p class="text-base md:text-xl text-white opacity-90 mt-2">العرض موجه لصناع المحتوى لفترة محدودة فقط</p>
+     </div>
+     <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl p-6 md:p-8 mb-6 border border-white border-opacity-30">
+      <div class="mb-6 flex justify-center"><img src="https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg" alt="Gemini AI" class="w-20 h-20 md:w-32 md:h-32" onerror="this.src=''; this.alt='صورة Gemini AI'; this.style.display='none';">
+      </div>
+      <div class="mb-6">
+       <p id="final-price" class="text-4xl md:text-6xl font-black mb-2">149 درهم فقط</p>
+       <p id="original-price" class="text-base md:text-lg line-through opacity-75">السعر الأصلي: 2499 درهم/شهر</p>
+      </div><button id="cta-button-1" class="pulse-button bg-white text-purple-700 px-6 md:px-8 py-3 md:py-4 rounded-full text-lg md:text-xl font-bold hover:bg-purple-50 transition-all w-full md:w-auto mb-6"> اطلب حسابك الآن وابدأ فوراً 🚀 </button>
+      <div class="flex items-center justify-center gap-3 md:gap-6 flex-wrap text-sm md:text-base">
+       <div class="flex items-center gap-2"><span class="text-xl md:text-2xl">✅</span> <span class="font-semibold">اشتراك رسمي</span>
+       </div>
+       <div class="flex items-center gap-2"><span class="text-xl md:text-2xl">🔒</span> <span class="font-semibold">آمن 100%</span>
+       </div>
+       <div class="flex items-center gap-2"><span class="text-xl md:text-2xl">⚡</span> <span class="font-semibold">حساب شخصي</span>
+       </div>
+      </div>
+     </div><!-- Countdown Badge -->
+     <div id="countdown-badge" class="countdown-badge inline-block px-6 md:px-8 py-3 md:py-4 rounded-full text-white font-bold text-lg md:text-2xl">
+      ⚡ تبقى 8 حسابات فقط
+     </div>
+    </div>
+   </div><!-- Features Section -->
+   <div class="w-full px-4 py-12 bg-white">
+    <div class="max-w-5xl mx-auto">
+     <h2 id="features-title" class="text-2xl md:text-4xl font-bold text-center text-purple-700 mb-10">مميزات الخطة المذهلة 🎁</h2>
+     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-10">
+      <div class="feature-card bg-gradient-to-br from-purple-50 to-white p-5 md:p-6 rounded-xl border-2 border-purple-200">
+       <div class="text-3xl md:text-4xl mb-3">
+        🤖
+       </div>
+       <h3 class="text-lg md:text-xl font-bold text-purple-700 mb-2">Gemini 3 Pro</h3>
+       <p class="text-sm md:text-base text-gray-700">الوصول إلى أحدث إصدار من Gemini 3 Pro للذكاء الاصطناعي المتقدم</p>
+      </div>
+      <div class="feature-card bg-gradient-to-br from-purple-50 to-white p-5 md:p-6 rounded-xl border-2 border-purple-200">
+       <div class="text-3xl md:text-4xl mb-3">
+        🎬
+       </div>
+       <h3 class="text-lg md:text-xl font-bold text-purple-700 mb-2">Veo 3.1 - جودة 1080p</h3>
+       <p class="text-sm md:text-base text-gray-700">إنشاء فيديوهات بالذكاء الاصطناعي بجودة عالية مع 45,000 رصيد</p>
+      </div>
+      <div class="feature-card bg-gradient-to-br from-purple-50 to-white p-5 md:p-6 rounded-xl border-2 border-purple-200">
+       <div class="text-3xl md:text-4xl mb-3">
+        🎥
+       </div>
+       <h3 class="text-lg md:text-xl font-bold text-purple-700 mb-2">Veo 3.1 - جودة 720p</h3>
+       <p class="text-sm md:text-base text-gray-700">إنشاء فيديوهات بالذكاء الاصطناعي بشكل لانهائي بدون حدود</p>
+      </div>
+      <div class="feature-card bg-gradient-to-br from-purple-50 to-white p-5 md:p-6 rounded-xl border-2 border-purple-200">
+       <div class="text-3xl md:text-4xl mb-3">
+        ✨
+       </div>
+       <h3 class="text-lg md:text-xl font-bold text-purple-700 mb-2">Whisk</h3>
+       <p class="text-sm md:text-base text-gray-700">تحويل الصور إلى فيديوهات مذهلة بالذكاء الاصطناعي</p>
+      </div>
+      <div class="feature-card bg-gradient-to-br from-purple-50 to-white p-5 md:p-6 rounded-xl border-2 border-purple-200">
+       <div class="text-3xl md:text-4xl mb-3">
+        🎨
+       </div>
+       <h3 class="text-lg md:text-xl font-bold text-purple-700 mb-2">Nano Banana</h3>
+       <p class="text-sm md:text-base text-gray-700">إنشاء الصور بالذكاء الاصطناعي بجودة احترافية</p>
+      </div>
+      <div class="feature-card bg-gradient-to-br from-purple-50 to-white p-5 md:p-6 rounded-xl border-2 border-purple-200">
+       <div class="text-3xl md:text-4xl mb-3">
+        ☁️
+       </div>
+       <h3 class="text-lg md:text-xl font-bold text-purple-700 mb-2">30 تيرابايت تخزين سحابي</h3>
+       <p class="text-sm md:text-base text-gray-700">مساحة تخزين ضخمة لجميع ملفاتك ومشاريعك</p>
+      </div>
+     </div>
+     <div class="text-center"><button id="cta-button-2" class="pulse-button bg-purple-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-lg md:text-xl font-bold hover:bg-purple-800 transition-all w-full md:w-auto"> اطلب الحساب الآن 🚀 </button>
+     </div>
+    </div>
+   </div><!-- Reviews Section -->
+   <div class="w-full px-4 py-12 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+     <h2 class="text-2xl md:text-4xl font-bold text-center text-purple-700 mb-10">آراء العملاء 💬</h2>
+     <div class="grid md:grid-cols-3 gap-4 md:gap-6"><!-- Review 1 -->
+      <div class="review-card bg-white rounded-xl p-5 md:p-6 shadow-lg">
+       <div class="flex items-center mb-4"><img src="https://i.pravatar.cc/150?img=12" alt="سفيان" class="w-12 h-12 md:w-16 md:h-16 rounded-full ml-3" onerror="this.src=''; this.alt='صورة المستخدم'; this.style.display='none';">
+        <div>
+         <h4 class="font-bold text-base md:text-lg text-gray-800">سفيان</h4>
+         <div class="flex gap-1 mt-1"><span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span>
+         </div>
+        </div>
+       </div>
+       <p class="text-sm md:text-base text-gray-700 leading-relaxed">"الصراحة Gemini Ultra غيّر ليا الخدمة!<br>
+        حولت صور عادية لفيديوهات خرافية،<br>
+        وخدمت بهم في الإعلانات ديالي... النتائج كانت 🔥🔥<br>
+        شكراً بزاف على هذا العرض 🙏"</p>
+      </div><!-- Review 2 -->
+      <div class="review-card bg-white rounded-xl p-5 md:p-6 shadow-lg">
+       <div class="flex items-center mb-4"><img src="https://i.pravatar.cc/150?img=33" alt="يوسف" class="w-12 h-12 md:w-16 md:h-16 rounded-full ml-3" onerror="this.src=''; this.alt='صورة المستخدم'; this.style.display='none';">
+        <div>
+         <h4 class="font-bold text-base md:text-lg text-gray-800">يوسف</h4>
+         <div class="flex gap-1 mt-1"><span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span>
+         </div>
+        </div>
+       </div>
+       <p class="text-sm md:text-base text-gray-700 leading-relaxed">"كنت متخوف نخلص فاللول...<br>
+        ولكن تواصلوا معي مباشرة وسيفطو ليا الحساب فـ10 دقائق.<br>
+        كلشي رسمي ومضمون 🛡️"</p>
+      </div><!-- Review 3 -->
+      <div class="review-card bg-white rounded-xl p-5 md:p-6 shadow-lg">
+       <div class="flex items-center mb-4"><img src="https://i.pravatar.cc/150?img=45" alt="إيمان" class="w-12 h-12 md:w-16 md:h-16 rounded-full ml-3" onerror="this.src=''; this.alt='صورة المستخدم'; this.style.display='none';">
+        <div>
+         <h4 class="font-bold text-base md:text-lg text-gray-800">إيمان</h4>
+         <div class="flex gap-1 mt-1"><span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg">★</span> <span class="star-filled text-base md:text-lg" style="opacity: 0.5;">★</span>
+         </div>
+        </div>
+       </div>
+       <p class="text-sm md:text-base text-gray-700 leading-relaxed">"الخدمة زوينة بزاف، ولكن...<br>
+        تفعّل الحساب ديالي فـ30 دقيقة عوض 15 🤷‍♂️<br>
+        لكن بصراحة الحساب قوي ومناسب لثمنو 👌<br>
+        وغادي نعاود نشترك كل شهر!"</p>
+      </div>
+     </div>
+     <div class="text-center mt-10"><button id="cta-button-3" class="pulse-button bg-purple-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-lg md:text-xl font-bold hover:bg-purple-800 transition-all w-full md:w-auto"> اطلب الحساب الآن 🚀 </button>
+     </div>
+    </div>
+   </div><!-- FAQ Section -->
+   <div class="w-full px-4 py-12 bg-white">
+    <div class="max-w-4xl mx-auto">
+     <h2 class="text-2xl md:text-4xl font-bold text-center text-purple-700 mb-10">الأسئلة الشائعة ❓</h2>
+     <div class="space-y-4"><!-- Question 1 -->
+      <div class="faq-item bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-purple-200 overflow-hidden">
+       <div class="faq-question p-5 md:p-6 flex justify-between items-center">
+        <h3 class="text-lg md:text-xl font-bold text-purple-700">كيف يمكنني الدفع؟</h3><span class="faq-icon text-2xl text-purple-700 transition-transform">+</span>
+       </div>
+       <div class="faq-answer px-5 md:px-6 pb-0 max-h-0 overflow-hidden">
+        <div class="pb-5 md:pb-6">
+         <p class="text-sm md:text-base text-gray-700 mb-3">نوفر لك أكثر طرق الدفع أماناً وسهولة:</p>
+         <ul class="text-sm md:text-base text-gray-700 space-y-2 mr-5">
+          <li>• التحويل البنكي</li>
+          <li>• بريد بنك</li>
+          <li>• Binance</li>
+          <li>• PayPal</li>
+          <li>• RedotPay</li>
+         </ul>
+         <p class="text-sm md:text-base text-gray-700 mt-3">كما يمكنك الدفع عبر تحويل محلي لأي وكالة</p>
+        </div>
+       </div>
+      </div><!-- Question 2 -->
+      <div class="faq-item bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-purple-200 overflow-hidden">
+       <div class="faq-question p-5 md:p-6 flex justify-between items-center">
+        <h3 class="text-lg md:text-xl font-bold text-purple-700">متى سأتوصل بالحساب بعد الدفع؟</h3><span class="faq-icon text-2xl text-purple-700 transition-transform">+</span>
+       </div>
+       <div class="faq-answer px-5 md:px-6 pb-0 max-h-0 overflow-hidden">
+        <div class="pb-5 md:pb-6">
+         <p class="text-sm md:text-base text-gray-700 mb-2">فور التحقق من الدفع، يتم إرسال الحساب مباشرة:</p>
+         <ul class="text-sm md:text-base text-gray-700 space-y-2 mr-5">
+          <li>• في أقل من 10 دقائق في أغلب الأحيان</li>
+          <li>• وقد يصل الوقت إلى 30 دقيقة كحد أقصى في الحالات الاستثنائية ⏱️</li>
+         </ul>
+        </div>
+       </div>
+      </div><!-- Question 3 -->
+      <div class="faq-item bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-purple-200 overflow-hidden">
+       <div class="faq-question p-5 md:p-6 flex justify-between items-center">
+        <h3 class="text-lg md:text-xl font-bold text-purple-700">هل الحساب يكون جاهزاً أم يتم تفعيله على حسابي؟</h3><span class="faq-icon text-2xl text-purple-700 transition-transform">+</span>
+       </div>
+       <div class="faq-answer px-5 md:px-6 pb-0 max-h-0 overflow-hidden">
+        <div class="pb-5 md:pb-6">
+         <p class="text-sm md:text-base text-gray-700 mb-2">تحصل على حساب جاهز بالكامل:</p>
+         <ul class="text-sm md:text-base text-gray-700 space-y-2 mr-5">
+          <li>• اسم مستخدم + كلمة مرور</li>
+          <li>• تقدر تغير البيانات كلها بعد الاستلام</li>
+          <li>• اشتراك Ultra + الميزات الكاملة مفعلة 👌</li>
+         </ul>
+        </div>
+       </div>
+      </div><!-- Question 4 -->
+      <div class="faq-item bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-purple-200 overflow-hidden">
+       <div class="faq-question p-5 md:p-6 flex justify-between items-center">
+        <h3 class="text-lg md:text-xl font-bold text-purple-700">هل هذا حساب رسمي وآمن؟</h3><span class="faq-icon text-2xl text-purple-700 transition-transform">+</span>
+       </div>
+       <div class="faq-answer px-5 md:px-6 pb-0 max-h-0 overflow-hidden">
+        <div class="pb-5 md:pb-6">
+         <p class="text-sm md:text-base text-gray-700 mb-2">نعم! الحساب رسمي 100%</p>
+         <p class="text-sm md:text-base text-gray-700">ويمكنك استخدامه بكل حرية لإنشاء فيديوهات ومشاريعك دون أي مشاكل 🔒⚡</p>
+        </div>
+       </div>
+      </div><!-- Question 5 -->
+      <div class="faq-item bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-purple-200 overflow-hidden">
+       <div class="faq-question p-5 md:p-6 flex justify-between items-center">
+        <h3 class="text-lg md:text-xl font-bold text-purple-700">ما الضمان الذي أحصل عليه؟</h3><span class="faq-icon text-2xl text-purple-700 transition-transform">+</span>
+       </div>
+       <div class="faq-answer px-5 md:px-6 pb-0 max-h-0 overflow-hidden">
+        <div class="pb-5 md:pb-6">
+         <p class="text-sm md:text-base text-gray-700 mb-2">نوفر لك:</p>
+         <ul class="text-sm md:text-base text-gray-700 space-y-2 mr-5">
+          <li>• ضمان اشتغال الحساب لمدة 30 يوم</li>
+          <li>• في حال حدث أي مشكل خلال هذه المدة 👉 استبدال فوري بحساب جديد مجاناً</li>
+         </ul>
+        </div>
+       </div>
+      </div><!-- Question 6 -->
+      <div class="faq-item bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-purple-200 overflow-hidden">
+       <div class="faq-question p-5 md:p-6 flex justify-between items-center">
+        <h3 class="text-lg md:text-xl font-bold text-purple-700">هل أستطيع استرجاع الأموال إذا غيرت رأيي؟</h3><span class="faq-icon text-2xl text-purple-700 transition-transform">+</span>
+       </div>
+       <div class="faq-answer px-5 md:px-6 pb-0 max-h-0 overflow-hidden">
+        <div class="pb-5 md:pb-6">
+         <p class="text-sm md:text-base text-gray-700 mb-2">❌ لا يوجد استرجاع للأموال بعد تفعيل الحساب</p>
+         <p class="text-sm md:text-base text-gray-700">✔️ لكن يوجد استبدال كامل إذا واجهت أي مشكل خلال مدة الضمان</p>
+        </div>
+       </div>
+      </div><!-- Question 7 -->
+      <div class="faq-item bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-purple-200 overflow-hidden">
+       <div class="faq-question p-5 md:p-6 flex justify-between items-center">
+        <h3 class="text-lg md:text-xl font-bold text-purple-700">هل يمكنني طلب أكثر من حساب؟</h3><span class="faq-icon text-2xl text-purple-700 transition-transform">+</span>
+       </div>
+       <div class="faq-answer px-5 md:px-6 pb-0 max-h-0 overflow-hidden">
+        <div class="pb-5 md:pb-6">
+         <p class="text-sm md:text-base text-gray-700 mb-2">نعم، يمكنك طلب أي عدد من الحسابات حسب حاجتك ✨</p>
+         <p class="text-sm md:text-base text-gray-700">وتتوفر لك عروض خاصة للطلبات المتعددة 💼</p>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="text-center mt-10"><button id="cta-button-4" class="pulse-button bg-purple-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-lg md:text-xl font-bold hover:bg-purple-800 transition-all w-full md:w-auto"> اطلب الحساب الآن 🚀 </button>
+     </div>
+    </div>
+   </div><!-- Form Section -->
+   <div class="w-full px-4 py-12 gradient-bg">
+    <div class="max-w-2xl mx-auto">
+     <div class="bg-white rounded-2xl p-6 md:p-8 shadow-2xl">
+      <h2 id="form-title" class="text-2xl md:text-3xl font-bold text-center text-purple-700 mb-8">احجز حسابك الآن</h2>
+      <form id="order-form" class="space-y-6">
+       <div><label for="name" class="block text-gray-700 font-semibold mb-2 text-sm md:text-base">الاسم الكامل</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 rounded-lg border-2 border-purple-200 focus:border-purple-500 focus:outline-none transition-colors text-sm md:text-base" placeholder="أدخل اسمك الكامل">
+       </div>
+       <div><label for="whatsapp" class="block text-gray-700 font-semibold mb-2 text-sm md:text-base">رقم واتساب</label> <input type="tel" id="whatsapp" name="whatsapp" required class="w-full px-4 py-3 rounded-lg border-2 border-purple-200 focus:border-purple-500 focus:outline-none transition-colors text-sm md:text-base" placeholder="مثال: 212600000000">
+       </div><button type="submit" id="submit-button" class="w-full bg-purple-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-lg md:text-xl font-bold hover:bg-purple-800 transition-all"> إرسال الطلب 📨 </button>
+      </form>
+      <div class="mt-8 space-y-3 text-center">
+       <div class="flex items-center justify-center gap-2 text-sm md:text-base text-gray-700"><span class="text-xl md:text-2xl">🔒</span> <span class="font-semibold">ضمان استرجاع المبلغ</span>
+       </div>
+       <div class="flex items-center justify-center gap-2 text-sm md:text-base text-gray-700"><span class="text-xl md:text-2xl">⚡</span> <span class="font-semibold">تواصل فوري بعد إرسال الطلب</span>
+       </div>
+       <div class="flex items-center justify-center gap-2 text-sm md:text-base text-gray-700"><span class="text-xl md:text-2xl">⏱️</span> <span class="font-semibold">الحساب يوصلك في أقل من 30 دقيقة</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: "قم بإنشاء فيديوهات بالذكاء الاصطناعي بجودة عالية مع خطة Gemini Ultra",
+      subtitle: "",
+      original_price_text: "السعر الأصلي: 2499 درهم/شهر",
+      discount_price_text: "",
+      final_price: "149 درهم فقط",
+      button_text: "اطلب حسابك الآن وابدأ فوراً",
+      features_title: "مميزات الخطة المذهلة 🎁",
+      form_title: "احجز حسابك الآن",
+      success_message: "تم إرسال طلبك بنجاح!",
+      background_color: "#667eea",
+      surface_color: "#ffffff",
+      text_color: "#1f2937",
+      primary_action_color: "#7c3aed",
+      secondary_action_color: "#a78bfa"
+    };
+
+    let currentOrders = [];
+
+    const dataHandler = {
+      onDataChanged(data) {
+        currentOrders = data;
+      }
+    };
+
+    async function onConfigChange(config) {
+      const mainTitle = config.main_title || defaultConfig.main_title;
+      const originalPrice = config.original_price_text || defaultConfig.original_price_text;
+      const finalPrice = config.final_price || defaultConfig.final_price;
+      const buttonText = config.button_text || defaultConfig.button_text;
+      const featuresTitle = config.features_title || defaultConfig.features_title;
+      const formTitle = config.form_title || defaultConfig.form_title;
+      
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryActionColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryActionColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+
+      document.getElementById('main-title').textContent = mainTitle;
+      document.getElementById('original-price').textContent = originalPrice;
+      document.getElementById('final-price').textContent = finalPrice;
+      document.getElementById('features-title').textContent = featuresTitle;
+      document.getElementById('form-title').textContent = formTitle;
+      
+      const ctaButton1 = document.getElementById('cta-button-1');
+      const ctaButton2 = document.getElementById('cta-button-2');
+      
+      if (ctaButton1) ctaButton1.textContent = buttonText + ' 🚀';
+      if (ctaButton2) ctaButton2.textContent = 'اطلب الحساب الآن 🚀';
+
+      const gradientBgs = document.querySelectorAll('.gradient-bg');
+      gradientBgs.forEach(el => {
+        el.style.background = `linear-gradient(135deg, ${backgroundColor} 0%, ${secondaryActionColor} 100%)`;
+      });
+
+      const featureCards = document.querySelectorAll('.feature-card');
+      featureCards.forEach(card => {
+        card.style.background = `linear-gradient(to bottom right, ${surfaceColor}, #faf5ff)`;
+        card.style.borderColor = secondaryActionColor;
+        const heading = card.querySelector('h3');
+        if (heading) heading.style.color = primaryActionColor;
+        const text = card.querySelector('p');
+        if (text) text.style.color = textColor;
+      });
+
+      const formContainer = document.querySelector('#order-form').parentElement;
+      formContainer.style.backgroundColor = surfaceColor;
+
+      const submitButton = document.getElementById('submit-button');
+      if (submitButton) {
+        submitButton.style.backgroundColor = primaryActionColor;
+      }
+
+      const ctaButtons = document.querySelectorAll('[id^="cta-button-"]');
+      ctaButtons.forEach(btn => {
+        if (btn.id === 'cta-button-1') {
+          btn.style.color = primaryActionColor;
+        } else {
+          btn.style.backgroundColor = primaryActionColor;
+        }
+      });
+    }
+
+    window.elementSdk.init({
+      defaultConfig,
+      onConfigChange,
+      mapToCapabilities: (config) => ({
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              config.surface_color = value;
+              window.elementSdk.setConfig({ surface_color: value });
+            }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => config.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => {
+              config.primary_action_color = value;
+              window.elementSdk.setConfig({ primary_action_color: value });
+            }
+          },
+          {
+            get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => {
+              config.secondary_action_color = value;
+              window.elementSdk.setConfig({ secondary_action_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      }),
+      mapToEditPanelValues: (config) => new Map([
+        ["main_title", config.main_title || defaultConfig.main_title],
+        ["subtitle", config.subtitle || defaultConfig.subtitle],
+        ["original_price_text", config.original_price_text || defaultConfig.original_price_text],
+        ["discount_price_text", config.discount_price_text || defaultConfig.discount_price_text],
+        ["final_price", config.final_price || defaultConfig.final_price],
+        ["button_text", config.button_text || defaultConfig.button_text],
+        ["features_title", config.features_title || defaultConfig.features_title],
+        ["form_title", config.form_title || defaultConfig.form_title],
+        ["success_message", config.success_message || defaultConfig.success_message]
+      ])
+    });
+
+    // Countdown Animation Logic
+    function startCountdown() {
+      const countdownBadge = document.getElementById('countdown-badge');
+      const countdownSequence = [
+        { accounts: 8, delay: 0 },
+        { accounts: 7, delay: 5000 },
+        { accounts: 6, delay: 10000 },
+        { accounts: 5, delay: 20000 },
+        { accounts: 4, delay: 10000 },
+        { accounts: 3, delay: 5000 }
+      ];
+      
+      const shouldRandomize = Math.random() > 0.5;
+      if (shouldRandomize) {
+        countdownSequence[1].delay = 20000;
+        countdownSequence[2].accounts = 7;
+      }
+      
+      let currentIndex = 0;
+      
+      function updateCountdown() {
+        if (currentIndex < countdownSequence.length) {
+          const current = countdownSequence[currentIndex];
+          
+          setTimeout(() => {
+            countdownBadge.classList.add('countdown-update');
+            countdownBadge.textContent = `⚡ تبقى ${current.accounts} حسابات فقط`;
+            
+            setTimeout(() => {
+              countdownBadge.classList.remove('countdown-update');
+            }, 600);
+            
+            currentIndex++;
+            if (currentIndex < countdownSequence.length) {
+              updateCountdown();
+            }
+          }, current.delay);
+        }
+      }
+      
+      updateCountdown();
+    }
+
+    // FAQ Accordion Logic
+    function initFAQ() {
+      const faqItems = document.querySelectorAll('.faq-item');
+      
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        question.addEventListener('click', () => {
+          const isActive = item.classList.contains('active');
+          
+          // Close all other FAQ items
+          faqItems.forEach(otherItem => {
+            if (otherItem !== item) {
+              otherItem.classList.remove('active');
+            }
+          });
+          
+          // Toggle current item
+          if (isActive) {
+            item.classList.remove('active');
+          } else {
+            item.classList.add('active');
+          }
+        });
+      });
+    }
+
+    async function init() {
+      const initResult = await window.dataSdk.init(dataHandler);
+      if (!initResult.isOk) {
+        console.error("Failed to initialize data SDK");
+        return;
+      }
+
+      startCountdown();
+      initFAQ();
+
+      const form = document.getElementById('order-form');
+      const submitButton = document.getElementById('submit-button');
+      const toast = document.getElementById('toast');
+
+      const ctaButtons = document.querySelectorAll('[id^="cta-button-"]');
+      ctaButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          document.getElementById('name').focus();
+        });
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        if (currentOrders.length >= 999) {
+          showToast('عذراً، تم الوصول إلى الحد الأقصى من الطلبات. يرجى المحاولة لاحقاً.', false);
+          return;
+        }
+
+        const formData = new FormData(form);
+        const name = formData.get('name');
+        const whatsapp = formData.get('whatsapp');
+
+        submitButton.classList.add('loading');
+        submitButton.textContent = 'جاري الإرسال...';
+
+        const orderData = {
+          id: Date.now().toString(),
+          name: name,
+          whatsapp: whatsapp,
+          payment_method: '',
+          submitted_at: new Date().toISOString()
+        };
+
+        const result = await window.dataSdk.create(orderData);
+
+        submitButton.classList.remove('loading');
+        submitButton.innerHTML = 'إرسال الطلب 📨';
+
+        if (result.isOk) {
+          const config = window.elementSdk.config;
+          const successMsg = config.success_message || defaultConfig.success_message;
+          showToast(successMsg + ' سنتواصل معك قريباً على واتساب', true);
+          form.reset();
+        } else {
+          showToast('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.', false);
+        }
+      });
+
+      function showToast(message, isSuccess) {
+        toast.textContent = message;
+        toast.style.backgroundColor = isSuccess ? '#10b981' : '#ef4444';
+        toast.style.display = 'block';
+        
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 4000);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a74a111346a1b0c',t:'MTc2NDYxMzU0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
